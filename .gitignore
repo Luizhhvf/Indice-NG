@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Dados pesados — NÃO versionar
+# A malha municipal do IBGE tem ~286 MB, acima do limite de 100 MB por arquivo
+# do GitHub. Regere o cache com: python tools/gerar_cache.py
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.sbn
+*.sbx
+
+# Exceção: o cache do mapa (~2,7 MB) É versionado de propósito — é o que
+# permite o app rodar em qualquer máquina e no Streamlit Cloud sem precisar
+# baixar os 286 MB da malha do IBGE.
+!data/ng_municipios_cache_2026.parquet
+
+# Editores / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+~$*
+
+# Streamlit — segredos nunca vão para o repositório
+.streamlit/secrets.toml
