@@ -48,6 +48,32 @@ def render_filtros(gdf: gpd.GeoDataFrame) -> tuple[str, str, tuple[float, float]
     return uf_sel, cidade_sel, faixa
 
 
+def estilo_basemap() -> str:
+    """Estilo de basemap a usar, com escape para redes que bloqueiam CDN.
+
+    O fundo do mapa vem de ``basemaps.cartocdn.com``. Algumas redes — móveis
+    com filtro de DNS, redes corporativas restritas — não alcançam esse
+    domínio, e o resultado é uma tela preta em vez de mapa.
+
+    Não dá para testar a conectividade do NAVEGADOR aqui, porque este código
+    roda no servidor: o servidor pode alcançar a Carto e o cliente não. Então
+    a escolha fica com quem está vendo, num controle discreto no fim da
+    sidebar. O padrão continua sendo o basemap bonito.
+    """
+    st.sidebar.divider()
+    sem_fundo = st.sidebar.checkbox(
+        "Mapa não carrega?",
+        value=False,
+        help=(
+            "Marque se o mapa aparecer preto. Usa o estilo embutido, sem "
+            "buscar o fundo em servidor externo — útil em redes que bloqueiam "
+            "CDN."
+        ),
+        key="ng_basemap_offline",
+    )
+    return cfg.MAP_STYLE_FALLBACK if sem_fundo else cfg.MAP_STYLE
+
+
 def render_legenda(labels_visiveis: list[str]) -> None:
     """Quadradinhos coloridos da legenda, só das faixas presentes no recorte."""
     st.sidebar.divider()
