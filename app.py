@@ -67,8 +67,18 @@ ui.render_legenda(cls.classes_presentes(df_mapa))
 # ----------------------------------------------------------------------
 ui.render_metricas(df_mapa)
 
+# O nível do recorte define quanto detalhe geométrico vale a pena enviar: no
+# zoom do Brasil, vértices menores que um pixel só engordam o payload. Ver
+# mapa.simplificar_para_zoom.
+nivel = mp.nivel_de(uf_sel, cidade_sel)
+
 st.pydeck_chart(
-    mp.construir_deck(df_mapa, mp.zoom_para(uf_sel, cidade_sel)),
+    mp.construir_deck(
+        df_mapa,
+        mp.zoom_para(uf_sel, cidade_sel),
+        nivel=nivel,
+        map_style=ui.estilo_basemap(),
+    ),
     height=cfg.ALTURA_MAPA,
     width="stretch",
 )
