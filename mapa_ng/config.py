@@ -86,12 +86,46 @@ COR_SEM_CLASSE = [120, 120, 120, 140]
 # ----------------------------------------------------------------------
 # Mapa
 # ----------------------------------------------------------------------
+# Basemap externo (CDN da Carto). Se a rede do usuário bloquear esse domínio,
+# o mapa.py cai para MAP_STYLE_FALLBACK — melhor um mapa sem fundo do que uma
+# tela preta.
 MAP_STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+
+# None = sem basemap algum. Os polígonos são desenhados sobre fundo liso, sem
+# nenhuma requisição externa. Atenção: os atalhos do pydeck ("dark", "light")
+# NÃO servem aqui — eles resolvem para a mesma URL da Carto e manteriam o
+# problema. Só None realmente elimina a dependência de rede.
+MAP_STYLE_FALLBACK = None
+
 CENTRO_BRASIL = (-15.78, -47.92)  # (lat, lon) — Brasília, usado se não houver dados
 ZOOM_CIDADE = 10.0
 ZOOM_UF = 5.5
 ZOOM_BRASIL = 3.5
 ALTURA_MAPA = 800
+
+# ----------------------------------------------------------------------
+# Orçamento de detalhe geométrico
+# ----------------------------------------------------------------------
+# Todo vértice do polígono viaja até o navegador dentro do JSON do deck. Com os
+# 5.488 municípios em detalhe cheio isso dá ~17 MB — 0,7 s numa fibra, mais de
+# 45 s num 4G fraco. Como o deck desenha o basemap antes de receber os dados,
+# numa rede lenta o mapa aparece sem as cores.
+#
+# A saída é simplificar conforme o zoom. Na visão nacional (zoom 3.5) um pixel
+# da tela cobre cerca de 0,04°, então vértices mais finos que isso são detalhe
+# que ninguém enxerga. Simplificar em 0,05° é visualmente idêntico e derruba o
+# payload para ~5,9 MB.
+#
+# Quanto mais fechado o recorte, menos municípios sobram e mais detalhe cabe:
+# um estado inteiro dá ~2 MB, uma cidade dá 4 KB. Por isso a cidade não é
+# simplificada — o custo já é irrisório e o contorno importa naquele zoom.
+#
+# Valores em graus decimais. None = sem simplificação.
+TOLERANCIA_POR_ZOOM = {
+    "brasil": 0.05,   # ~5 km  — 1 pixel no zoom 3.5
+    "uf":     0.01,   # ~1 km  — 1 pixel no zoom 5.5
+    "cidade": None,   # detalhe original
+}
 
 # Texto do rodapé/subtítulo — a norma de referência do índice Ng.
 NORMA = "ABNT NBR 5419-2:2026"
