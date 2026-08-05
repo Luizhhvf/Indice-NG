@@ -1,5 +1,3 @@
-# Pesquisa de índice de Ng por cidade — SPDA
-# Versão melhorada: cache persistente do sjoin, filtros aprimorados, UI refinada, escala e cores dinâmicas
 import streamlit as st
 import pandas as pd
 import pydeck as pdk
