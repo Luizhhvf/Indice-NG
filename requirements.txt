@@ -1,0 +1,20 @@
+# Mapa Ng (SPDA) — dependências
+#
+# Faixas com limite superior (~=) em vez de versão exata: o Streamlit Cloud
+# recompila o ambiente a cada deploy, e travar no patch exato provoca falha de
+# build quando uma delas some do índice. O ~= aceita correções de patch e
+# barra major/minor, que é onde moram as quebras.
+#
+# Versões testadas em 2026-08: as que aparecem no comentário ao lado.
+
+streamlit~=1.60.0        # 1.60.0 — st.pydeck_chart(width="stretch") exige >=1.49
+pandas~=2.3.0            # 2.3.3
+geopandas~=1.1.0         # 1.1.4 — read_parquet nativo
+pydeck~=0.9.0            # 0.9.3
+pyarrow~=24.0            # 24.0.0 — backend do parquet
+openpyxl~=3.1.0          # 3.1.5 — download da tabela em .xlsx
+
+# Trazidas pelo geopandas; fixadas porque a leitura do parquet geoespacial
+# depende do par shapely/pyproj e uma combinação errada falha só em runtime.
+shapely~=2.1.0           # 2.1.2
+pyproj~=3.7.0            # 3.7.1
