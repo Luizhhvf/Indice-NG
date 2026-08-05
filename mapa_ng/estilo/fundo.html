@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Ng — fundo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100%; height: 100%; overflow: hidden;
+            background-color: #303030; position: relative;
+        }
+        .fundo-ondas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <svg class="fundo-ondas" viewBox="0 0 1440 900" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="grad-base" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#1B1B1B" />
+                <stop offset="44%" stop-color="#4A4A4A" />
+                <stop offset="46%" stop-color="#6A6A6A" />
+                <stop offset="48%" stop-color="#4A4A4A" />
+                <stop offset="50%" stop-color="#6A6A6A" />
+                <stop offset="52%" stop-color="#4A4A4A" />
+                <stop offset="54%" stop-color="#6A6A6A" />
+                <stop offset="100%" stop-color="#171717" />
+            </linearGradient>
+            
+            <linearGradient id="grad-intermediario" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#202020" />
+                <stop offset="45%" stop-color="#565656" />
+                <stop offset="47%" stop-color="#3C3C3C" />
+                <stop offset="49%" stop-color="#5D5D5D" />
+                <stop offset="51%" stop-color="#3C3C3C" />
+                <stop offset="53%" stop-color="#5D5D5D" />
+                <stop offset="100%" stop-color="#2A2A2A" />
+            </linearGradient>
+
+            <style>
+                /* Animações embutidas para sobreviver à extração via Base64 no Python */
+                .camada-fundo {
+                    animation: flutuar-onda-1 18s ease-in-out infinite alternate;
+                    transform-origin: center;
+                }
+                .camada-meio {
+                    animation: flutuar-onda-2 24s ease-in-out infinite alternate;
+                    transform-origin: center;
+                }
+                .camada-frente {
+                    animation: flutuar-onda-3 20s ease-in-out infinite alternate;
+                    transform-origin: center;
+                }
+                .linhas-brilho-1 {
+                    animation: flutuar-linha-1 15s ease-in-out infinite alternate;
+                }
+                .linhas-brilho-2 {
+                    animation: flutuar-linha-2 19s ease-in-out infinite alternate;
+                }
+
+                @keyframes flutuar-onda-1 {
+                    0%   { transform: translate3d(0px, 0px, 0) scaleY(0.98); }
+                    25%  { transform: translate3d(-12px, -8px, 0) scaleY(1.01); }
+                    50%  { transform: translate3d(6px, -18px, 0) scaleY(1.04); }
+                    75%  { transform: translate3d(18px, 10px, 0) scaleY(1.0); }
+                    100% { transform: translate3d(-8px, 14px, 0) scaleY(0.96); }
+                }
+
+                @keyframes flutuar-onda-2 {
+                    0%   { transform: translate3d(0px, 0px, 0) scaleX(0.98); }
+                    30%  { transform: translate3d(16px, 10px, 0) scaleX(1.01); }
+                    60%  { transform: translate3d(-12px, -16px, 0) scaleX(1.03); }
+                    100% { transform: translate3d(20px, 8px, 0) scaleX(0.97); }
+                }
+
+                @keyframes flutuar-onda-3 {
+                    0%   { transform: translate3d(0px, 0px, 0) scale(0.99); }
+                    40%  { transform: translate3d(-18px, 12px, 0) scale(1.02); }
+                    70%  { transform: translate3d(10px, -8px, 0) scale(1.04); }
+                    100% { transform: translate3d(-22px, 20px, 0) scale(0.97); }
+                }
+
+                @keyframes flutuar-linha-1 {
+                    0%   { transform: translate3d(0px, 0px, 0); opacity: 0.25; }
+                    30%  { transform: translate3d(-10px, -14px, 0); opacity: 0.45; }
+                    60%  { transform: translate3d(12px, 8px, 0); opacity: 0.35; }
+                    100% { transform: translate3d(8px, 16px, 0); opacity: 0.18; }
+                }
+
+                @keyframes flutuar-linha-2 {
+                    0%   { transform: translate3d(0px, 0px, 0); opacity: 0.35; }
+                    40%  { transform: translate3d(14px, -10px, 0); opacity: 0.55; }
+                    70%  { transform: translate3d(-8px, 12px, 0); opacity: 0.42; }
+                    100% { transform: translate3d(18px, -14px, 0); opacity: 0.6; }
+                }
+            </style>
+        </defs>
+
+        <rect width="1440" height="900" fill="#303030"/>
+
+        <path class="camada-fundo" d="M-100,900 C300,830 400,550 700,720 C1000,890 1200,600 1600,780 L1600,900 Z" fill="url(#grad-base)" opacity="0.6"/>
+
+        <path class="camada-meio" d="M-100,450 C250,250 520,650 850,400 C1150,150 1320,500 1600,300 L1600,1000 L-100,1000 Z" fill="url(#grad-intermediario)" opacity="0.4"/>
+
+        <path class="camada-frente" d="M-100,650 C350,450 620,800 950,550 C1250,300 1320,700 1600,600 L1600,1000 L-100,1000 Z" fill="#5F5F5F" opacity="0.25"/>
+
+        <path class="linhas-brilho-1" d="M-50,350 Q380,680 780,320 T1550,450" fill="none" stroke="#777777" stroke-width="3"/>
+        <path class="linhas-brilho-2" d="M-50,400 Q430,280 830,580 T1600,250" fill="none" stroke="#8E8E8E" stroke-width="1.5"/>
+        <path class="linhas-brilho-1" d="M-50,550 Q330,820 730,480 T1500,650" fill="none" stroke="#8E8E8E" stroke-width="2"/>
+        
+    </svg>
+
+</body>
+</html>
