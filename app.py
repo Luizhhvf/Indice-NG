@@ -18,10 +18,21 @@ O nome mais longo elimina a colisão.
 """
 from __future__ import annotations
 
-import streamlit as st
+import sys
+from pathlib import Path
 
-from mapa_ng import classificacao as cls
-from mapa_ng import config as cfg
+# Garante que o ``mapa_ng`` importado seja o desta pasta, e não outra cópia que
+# esteja no sys.path (instalação antiga, projeto irmão, PYTHONPATH herdado).
+# Sem isso o sintoma é obscuro: o import funciona, mas falta uma função nova —
+# porque o módulo veio de outro lugar.
+_RAIZ = str(Path(__file__).resolve().parent)
+if sys.path and sys.path[0] != _RAIZ:
+    sys.path.insert(0, _RAIZ)
+
+import streamlit as st  # noqa: E402
+
+from mapa_ng import classificacao as cls  # noqa: E402
+from mapa_ng import config as cfg  # noqa: E402
 from mapa_ng import dados as dd
 from mapa_ng import mapa as mp
 from mapa_ng import ui
