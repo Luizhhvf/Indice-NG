@@ -1,32 +1,39 @@
 # -*- coding: utf-8 -*-
-"""mapa_ng — Mapa de densidade de descargas atmosféricas (índice Ng).
+"""estilo — identidade visual do app.
 
-Consulta do índice Ng por município brasileiro, conforme ABNT NBR 5419-2:2026,
-para dimensionamento de SPDA.
+O CSS (fundo em ondas, cards translúcidos, logo no rodapé da sidebar) mora em
+:mod:`ng.estilo.style`, junto com ``fundo.html`` e ``logo-uff.png``. Tudo local:
+o projeto não depende de rede nem de servidor de arquivos.
 
-Organização
------------
-::
-
-    config.py         caminhos, colunas, paleta, zooms — tudo que é constante
-    dados.py          carrega o cache .parquet e aplica filtros
-    classificacao.py  faixas dinâmicas de Ng e cores derivadas
-    mapa.py           monta o deck PyDeck
-    ui.py             sidebar, métricas, legenda, tabela
-    estilo/           CSS do tema, fundo em ondas e logo
-
-O ponto de entrada é ``app.py``, na raiz — é ele que o Streamlit executa.
-
-Dado
-----
-O app depende de um único arquivo: ``data/ng_municipios_cache_2026.parquet``
-(~2,7 MB), com os municípios já cruzados com o Ng. A malha do IBGE (~286 MB)
-não faz parte do repositório; serve apenas para regerar esse cache, via
-``tools/gerar_cache.py``.
-
-Nenhum módulo acessa rede, banco de dados ou serviço externo. Clonar o
-repositório e instalar o ``requirements.txt`` é tudo que o app precisa.
+``aplicar()`` nunca levanta exceção. Estilo é enfeite; um app sem enfeite ainda
+responde a pergunta de quem abriu. Se o CSS falhar, o tema base declarado em
+``.streamlit/config.toml`` assume.
 """
+from __future__ import annotations
 
-__version__ = "1.0.0"
-__all__ = ["config", "dados", "classificacao", "mapa", "ui", "estilo"]
+import streamlit as st
+
+
+def aplicar() -> bool:
+    """Aplica o CSS do tema. Devolve ``True`` se conseguiu, ``False`` se não.
+
+    Escape de diagnóstico: abrir a URL com ``?estilo=off`` pula o CSS por
+    completo e o app roda só com o tema do ``.streamlit/config.toml``.
+
+    Serve para separar problema de estilo de problema de dado sem precisar de
+    console do navegador — útil justamente em celular e tablet, onde não dá
+    para inspecionar. Se algo aparece com ``?estilo=off`` e some sem ele, o
+    culpado é o CSS.
+    """
+    try:
+        if st.query_params.get("estilo") == "off":
+            return False
+    except Exception:
+        pass  # versões antigas do Streamlit não têm query_params
+
+    try:
+        from .style import apply_sidebar_style
+        apply_sidebar_style()
+        return True
+    except Exception:
+        return False
