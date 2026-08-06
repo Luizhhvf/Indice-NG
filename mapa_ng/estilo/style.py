@@ -562,6 +562,45 @@ section[data-testid="stSidebar"] .stFormSubmitButton > button:hover {
         border-color: rgba(255,255,255,0.16) !important;
     }
 
+    /* =====================================================
+       MAPA: CANVAS WebGL FORA DAS CAMADAS DE EFEITO
+
+       O deck.gl não desenha no mesmo canvas do basemap — ele sobrepõe um
+       segundo canvas WebGL. E o contêiner de gráficos do Streamlit recebe,
+       lá em cima, backdrop-filter + animation + transform, que juntos criam
+       uma camada de composição.
+
+       No Chrome do desktop isso passa. No Safari do iPad/iPhone a camada
+       engole o canvas de cima: o fundo do mapa aparece normalmente e os
+       polígonos somem. O sintoma é exatamente "o mapa carrega mas não
+       colore" só no iPad.
+
+       Aqui o contêiner do mapa é devolvido ao fluxo normal de pintura.
+       Os cards e métricas continuam com o efeito.
+    ===================================================== */
+    [data-testid="stMain"] [data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stDeckGlJsonChart"]),
+    [data-testid="stMain"] [data-testid="stVerticalBlock"]:has([data-testid="stDeckGlJsonChart"]),
+    [data-testid="stMain"] [data-testid="stElementContainer"]:has([data-testid="stDeckGlJsonChart"]) {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        animation: none !important;
+        transform: none !important;
+        transition: none !important;
+        box-shadow: none !important;
+    }
+    /* O :hover também aplicava transform, recriando a camada ao tocar na tela. */
+    [data-testid="stMain"] [data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stDeckGlJsonChart"]):hover {
+        transform: none !important;
+    }
+    /* Nada de filtro sobre o próprio canvas nem sobre seus pais imediatos. */
+    [data-testid="stDeckGlJsonChart"],
+    [data-testid="stDeckGlJsonChart"] > div,
+    [data-testid="stDeckGlJsonChart"] canvas {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        filter: none !important;
+    }
+
     </style>
     """
     css = css.replace("__CAMADA_FUNDO__", camada_fundo)
